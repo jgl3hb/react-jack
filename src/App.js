@@ -9,11 +9,21 @@ const deckData = [
     "sA", "sQ", "sK", "sJ", "s10", "s09", "s08", "s07", "s06", "s05", "s04", "s03", "s02"
   ];
 
+const Blackjack = () => {
+  const [playerHand, setPlayerHand] = useState([]);
+  const [dealerHand, setDealerHand] = useState([]);
+  const [playerBank, setPlayerBank] = useState(500);
+  const [currentBet, setCurrentBet] = useState(0);
+  const [deck, setDeck] = useState(deckData)
+  const [status, setStatus] = useState('');
+  const [playerScore, setPlayerScore] = useState(0);
+  const [dealerScore, setDealerScore] = useState(0);
+  const [gameover, setGameOver] = useState(false);
 
 
 
 
-function App() {
+
 }
 
 export default App;
