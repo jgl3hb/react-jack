@@ -20,10 +20,12 @@ const Blackjack = () => {
   const [dealerScore, setDealerScore] = useState(0);
   const [gameover, setGameOver] = useState(false);
 
+  return (
+    <div>
+    Blackjack 
+    </div>  
+  );
 
+};
 
-
-
-}
-
-export default App;
+export default Blackjack;
