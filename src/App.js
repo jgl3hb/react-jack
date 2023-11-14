@@ -20,9 +20,30 @@ const Blackjack = () => {
   const [dealerScore, setDealerScore] = useState(0);
   const [gameover, setGameOver] = useState(false);
 
+
+
+
+
+
+
+
+
+
+
+
+
+
   return (
     <div>
-    Blackjack 
+    status
+    dealerHand
+    playerHand
+    playerScore
+    deal
+    hit
+    stand 
+    reset game
+    
     </div>  
   );
 
