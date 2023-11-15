@@ -32,15 +32,9 @@ const Blackjack = () => {
     }
     return value;
   };
-
-
   const computeHandTotal = (hand) => {
     const total = handleAces(hand, hand.reduce((total, card) => total + cardLookup(card), 0));
-    return total;
-  };
-  
-  
-
+    return total;};
   const handleAces = (hand, total) => {
     let aces = hand.filter(card => card[1] === 'A');
     aces.forEach(() => { if (total > 21) total -= 10; });
@@ -190,8 +184,9 @@ const Blackjack = () => {
   };
 
   useEffect(() => {
-    renderBlackjack();
-  }, [playerHand, dealerHand]);
+    setPlayerScore(computeHandTotal(playerHand));
+    setDealerScore(computeHandTotal(dealerHand));
+  }, [playerHand, dealerHand, computeHandTotal]);
 
   return (
     <div className="min-h-screen p-4 flex flex-col items-center justify-center">
