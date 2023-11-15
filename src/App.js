@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
 import './cardstarter.css';
 
@@ -32,9 +32,13 @@ const Blackjack = () => {
     }
     return value;
   };
-  const computeHandTotal = (hand) => {
-    const total = handleAces(hand, hand.reduce((total, card) => total + cardLookup(card), 0));
-    return total;};
+  
+  const computeHandTotal = useCallback((hand) => {
+    let total = hand.reduce((acc, card) => acc + cardLookup(card), 0);
+    return handleAces(hand, total);
+  }, []); 
+  
+
   const handleAces = (hand, total) => {
     let aces = hand.filter(card => card[1] === 'A');
     aces.forEach(() => { if (total > 21) total -= 10; });
@@ -146,11 +150,6 @@ const Blackjack = () => {
     }
   };
 
-  const renderBlackjack = () => {
-    setPlayerScore(computeHandTotal(playerHand));
-    setDealerScore(computeHandTotal(dealerHand));
-  };
-
   const renderWin = (playerScore, dealerScore) => {
     if (playerScore > 21) {
       setGameOver(true);
@@ -187,7 +186,7 @@ const Blackjack = () => {
     setPlayerScore(computeHandTotal(playerHand));
     setDealerScore(computeHandTotal(dealerHand));
   }, [playerHand, dealerHand, computeHandTotal]);
-
+  
   return (
     <div className="min-h-screen p-4 flex flex-col items-center justify-center">
       <div className="flex justify-center pt-4" id="dealer-cards">{renderCard(dealerHand, 'dealer-cards')}</div>
