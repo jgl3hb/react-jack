@@ -35,7 +35,6 @@ const Blackjack = () => {
 
   const computeHandTotal = (hand) => {
     const total = handleAces(hand, hand.reduce((total, card) => total + cardLookup(card), 0));
-    console.log('computeHandTotal:', hand, total);
     return total;
   };
 
@@ -120,7 +119,6 @@ const Blackjack = () => {
         setStatus('Hit or Stand?');
       }
     } else {
-      console.log('Deal button clicked, but game is over or hands not empty.');
     }
   };
   
@@ -195,6 +193,9 @@ const Blackjack = () => {
   return (
     <div className="min-h-screen p-4 flex flex-col items-center justify-center">
       <div className="flex justify-center pt-4" id="dealer-cards">{renderCard(dealerHand, 'dealer-cards')}</div>
+      {gameOver && (
+      <div className="text-white text-4xl mb-4" id="dealerhandvalue">{dealerScore}</div>
+      )}
       <div className="text-white text-4xl mb-4" id="playerBank">Blackjack</div>
       <div className="text-white text-4xl mb-4" id="playerBank">Pays 3 to 2</div>
       <div className="text-white text-xl" id="status">{status}</div>
