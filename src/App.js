@@ -44,7 +44,20 @@ const Blackjack = () => {
     return total;
   };
 
-
+  const handleBet = (betAmount) => {
+    if (playerBank >= betAmount) {
+      setPlayerHand([]);
+      setDealerHand([]);
+      setPlayerScore(0);
+      setDealerScore(0);
+      setGameOver(false);
+      setStatus('Player Bet is $${betAmount}, Press Deal');
+      setCurrentBet(betAmount);
+      setPlayerBank(playerBank - betAmount);      
+    } else {
+      setStatus("You don't have enough money. Game Over.")
+    }
+  }
 
 
 
@@ -54,7 +67,7 @@ const Blackjack = () => {
 
   return (
     <div>
-    status
+    setStatus
     dealerHand
     playerHand
     playerScore
