@@ -45,12 +45,30 @@ const Blackjack = () => {
     return total;
   };
 
+  const renderCardRow = (hand, rowIndex) => {
+    return (
+      <div className="flex justify-center">
+        {hand.slice(rowIndex * 3, (rowIndex + 1) * 3).map((card, i) => (
+          <div
+            key={i}
+            className={`card ${card} w-24 h-36 sm:w-16 sm:h-24`}
+          ></div>
+        ))}
+      </div>
+    );
+  };
+
   const renderCard = (hand, deckId) => {
-    return hand.map((card, i) => (
-      <div
-        key={i}
-        className={`card large ${deckId === 'dealer-cards' && i === 1 && !gameOver ? 'back-red' : card}`}
-      ></div>
+    const numRows = Math.ceil(hand.length / 3);
+    const rows = Array.from({ length: numRows }, (_, rowIndex) => {
+      const start = rowIndex * 3;
+      return hand.slice(start, start + 3);
+    });
+  
+    return rows.map((row, index) => (
+      <div key={index} className="flex justify-center flex-wrap">
+        {renderCardRow(row, deckId)}
+      </div>
     ));
   };
 
@@ -188,17 +206,23 @@ const Blackjack = () => {
   }, [playerHand, dealerHand, computeHandTotal]);
   
   return (
-    <div className="min-h-screen p-4 flex flex-col items-center justify-center">
-      <div className="flex justify-center pt-4" id="dealer-cards">{renderCard(dealerHand, 'dealer-cards')}</div>
+    <div className="flex flex-col justify-between items-center">
+      <div className="pt-4" id="dealer-cards">
+        {renderCardRow(dealerHand, 0)}
+        {renderCardRow(dealerHand, 1)}
+      </div>
       {gameOver && (
-      <div className="text-white text-4xl mb-4" id="dealerhandvalue">{dealerScore}</div>
+        <div className="text-white text-4xl" id="dealerhandvalue">{dealerScore}</div>
       )}
-      <div className="text-white text-4xl mb-4" id="playerBank">Blackjack</div>
-      <div className="text-white text-4xl mb-4" id="playerBank">Pays 3 to 2</div>
+      <div className="text-white text-4xl" id="playerBank">Blackjack</div>
+      <div className="text-white text-4xl" id="playerBank">Pays 3 to 2</div>
       <div className="text-white text-xl" id="status">{status}</div>
-      <div className="flex justify-center" id="player-cards">{renderCard(playerHand, 'player-cards')}</div>
+      <div className="pt-4" id="player-cards">
+        {renderCardRow(playerHand, 0)}
+        {renderCardRow(playerHand, 1)}
+      </div>
       <div className="text-white text-4xl" id="playerhandvalue">{playerScore}</div>
-      <div className="flex space-x-4 mb-4">
+      <div className="flex space-x-4">
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           onClick={() => {
             if (!gameOver) {
@@ -209,7 +233,7 @@ const Blackjack = () => {
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={stand}>Stand</button>
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={resetGame}>Reset</button>
       </div>
-      <div className="flex space-x-4 mb-4" id="betting-area">
+      <div className="flex space-x-4" id="betting-area">
         <button className="relative bg-red-500 text-black font-bold py-2 rounded-full w-12 h-12" onClick={() => handleBet(1)}>
           <span className="relative z-10">$1</span>
           <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-full" style={{ width: '70%', height: '70%' }}></span>
@@ -227,7 +251,7 @@ const Blackjack = () => {
           <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-full w-8 h-8"></span>
         </button>
       </div>
-      <div className="text-white text-4xl mb-4" id="playerBank">${playerBank}</div>
+      <div className="text-white text-4xl" id="playerBank">${playerBank}</div>
 
       </div>
   );

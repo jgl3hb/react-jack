@@ -87,3 +87,9 @@ div {
   font-weight: bold;
   border: 2px solid goldenrod;
 }
+
+@media (max-width: 600px) {
+  .card {
+    /* smaller size or different layout for small screens */
+  }
+}
