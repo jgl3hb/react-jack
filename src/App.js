@@ -20,10 +20,29 @@ const Blackjack = () => {
   const [dealerScore, setDealerScore] = useState(0);
   const [gameover, setGameOver] = useState(false);
 
+  const cardLookup = (card) => {
+    const cardValueStr = card.slice(1);
+    let value;
+    if (cardValueStr === 'A') {
+      value = 11;
+    } else if (['K', 'Q', 'J'].includes(cardValueStr)) {
+      value = 10; 
+    } else {
+      value = parseInt(cardValueStr, 10);
+    }
+  }
+  
+  const computeHandTotal = (hand) => {
+    const total = handleAces(hand, hand.reduce(total, card => total + cardLookup(card), 0));
+    console.log('computeHandTotal:', hand, total);
+    return total;
+  }
 
-
-
-
+  const handleAces = (hand, total) => {
+    let aces = hand.filter(card => card[1] === 'A');
+    aces.forEach(() => { if  (total > 21) total -= 10; });
+    return total;
+  };
 
 
 
@@ -43,7 +62,7 @@ const Blackjack = () => {
     hit
     stand 
     reset game
-    
+
     </div>  
   );
 
