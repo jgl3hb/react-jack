@@ -33,7 +33,7 @@ const Blackjack = () => {
   };
   
   const computeHandTotal = (hand) => {
-    const total = handleAces(hand, hand.reduce(total, card => total + cardLookup(card), 0));
+    const total = handleAces(hand, hand.reduce((total, card) => total + cardLookup(card), 0));
     console.log('computeHandTotal:', hand, total);
     return total;
   };
@@ -96,7 +96,7 @@ const Blackjack = () => {
       setDealerHand(tempDealerHand);
 
       //Check for blackjack
-      const playerBlackjack = checkForBlackJack(tempPlayerHand);
+      const playerBlackjack = checkForBlackjack(tempPlayerHand);
       const dealerBlackjack = checkForBlackjack(tempDealerHand)
 
       //update state based on blackjack check
@@ -152,8 +152,41 @@ const Blackjack = () => {
 
 
 
+  const renderWin = (playerScore, dealerScore) => {
+    if (playerScore > 21) {
+      setGameOver(true);
+      setCurrentBet(0)
+      setStatus('Player Busts, Dealer Wins')
+    } else if (dealerScore > 21) {
+      setGameOver(true)
+      setPlayerBank(playerBank + currentBet * 2);
+      setCurrentBet(0)
+      setStatus('Player Wins! Dealer Busts')
+    } else if (playerScore > dealerScore && playerScore <= 21) {
+      setGameOver(true);
+      setPlayerBank(playerBank + currentBet * 2);
+      setCurrentBet(0)
+      setStatus('Player Wins!')
+    } else if (dealerScore <= 21) {
+      setGameOver(true)
+      setCurrentBet(0)
+      setStatus('Dealer Wins')
+    }
+  };
 
+  const resetGame = () => {
+    setPlayerHand([])
+    setDealerHand([])
+    setPlayerBank(500)
+    setCurrentBet(0)
+    setDeck(deckData)
+    setStatus('Game reset. Place your bet!')
+    setGameOver(false)
+  }
 
+  useEffect(() => {
+    renderBlackjack()
+  }, [playerHand, dealerHand]);
 
 
 
