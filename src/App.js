@@ -30,18 +30,27 @@ const Blackjack = () => {
     } else {
       value = parseInt(cardValueStr, 10);
     }
-  }
+  };
   
   const computeHandTotal = (hand) => {
     const total = handleAces(hand, hand.reduce(total, card => total + cardLookup(card), 0));
     console.log('computeHandTotal:', hand, total);
     return total;
-  }
+  };
 
   const handleAces = (hand, total) => {
     let aces = hand.filter(card => card[1] === 'A');
     aces.forEach(() => { if  (total > 21) total -= 10; });
     return total;
+  };
+
+  const renderCard = (hand, deckId) => {
+    return hand.map((card, i) => (
+      <div
+        key={i}
+        className={"card large ${deckId === 'dealer-cards' && i == 1 && !gameOver ? 'back-red' : card}"}>
+        </div>
+    ));
   };
 
   const handleBet = (betAmount) => {
@@ -59,6 +68,21 @@ const Blackjack = () => {
     }
   }
 
+  const selectCard = () => {
+    const newDeck = [...deck];
+    const selectedCard = newDeck.splice(Math.floor(Math.random() * newDeck.length), 1)[0];
+    setDeck(newDeck);
+    return selectedCard;
+  }
+
+  const dealCard = (hand, callback) => {
+    const newHand = [...hand, selectCard()];
+    callback(newHand);
+  };
+
+  const checkForBlackjack = (hand) => {
+    return hand.includes('A' && hand.includes('10') || hand.includes('J') || hand.includes('Q') || hand.includes('K'));
+  };
 
 
 
