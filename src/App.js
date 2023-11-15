@@ -46,13 +46,17 @@ const Blackjack = () => {
   };
 
   const renderCardRow = (hand, rowIndex) => {
+    const rowSize = 3; // Define the number of card slots per row
+    const cardsInRow = hand.slice(rowIndex * rowSize, (rowIndex + 1) * rowSize);
+    const placeholdersCount = rowSize - cardsInRow.length; // Calculate how many placeholders are needed
+  
     return (
       <div className="flex justify-center">
-        {hand.slice(rowIndex * 3, (rowIndex + 1) * 3).map((card, i) => (
-          <div
-            key={i}
-            className={`card ${card} w-24 h-36 sm:w-16 sm:h-24`}
-          ></div>
+        {cardsInRow.map((card, i) => (
+          <div key={i} className={`card ${card} w-24 h-36 sm:w-16 sm:h-24`}></div>
+        ))}
+        {Array.from({ length: placeholdersCount }).map((_, i) => (
+          <div key={`placeholder-${i}`} className="card placeholder w-24 h-36 sm:w-16 sm:h-24"></div>
         ))}
       </div>
     );
@@ -208,19 +212,19 @@ const Blackjack = () => {
   return (
     <div className="flex flex-col justify-between items-center">
       <div className="pt-4" id="dealer-cards">
-        {renderCardRow(dealerHand, 0)}
-        {renderCardRow(dealerHand, 1)}
+        {renderCardRow(dealerHand, 0, 'sm:w-1400 md:w-1340 lg:w-1400')} 
+        {renderCardRow(dealerHand, 1, 'sm:w-1400 md:w-1340 lg:w-1400')} 
       </div>
       {gameOver && (
         <div className="text-white text-4xl" id="dealerhandvalue">{dealerScore}</div>
       )}
-      <div className="text-white text-4xl" id="playerBank">Blackjack</div>
-      <div className="text-white text-4xl" id="playerBank">Pays 3 to 2</div>
-      <div className="text-white text-xl" id="status">{status}</div>
-      <div className="pt-4" id="player-cards">
-        {renderCardRow(playerHand, 0)}
-        {renderCardRow(playerHand, 1)}
-      </div>
+        <div className="text-white text-4xl" id="playerBank">Blackjack</div>
+        <div className="text-white text-4xl" id="playerRules">Pays 3 to 2</div>
+        <div className="text-white text-xl" id="status">{status}</div>
+        <div className="p-0 m-0" id="player-cards">
+          {renderCardRow(playerHand, 0)}
+          {renderCardRow(playerHand, 1)}
+        </div>
       <div className="text-white text-4xl" id="playerhandvalue">{playerScore}</div>
       <div className="flex space-x-4">
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -253,7 +257,7 @@ const Blackjack = () => {
       </div>
       <div className="text-white text-4xl" id="playerBank">${playerBank}</div>
 
-      </div>
+    </div>
   );
 };
 
