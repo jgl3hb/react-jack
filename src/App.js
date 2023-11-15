@@ -18,7 +18,7 @@ const Blackjack = () => {
   const [status, setStatus] = useState('');
   const [playerScore, setPlayerScore] = useState(0);
   const [dealerScore, setDealerScore] = useState(0);
-  const [gameover, setGameOver] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
 
   const cardLookup = (card) => {
     const cardValueStr = card.slice(1);
@@ -83,6 +83,81 @@ const Blackjack = () => {
   const checkForBlackjack = (hand) => {
     return hand.includes('A' && hand.includes('10') || hand.includes('J') || hand.includes('Q') || hand.includes('K'));
   };
+
+  const initialDeal = () => {
+    if (!gameOver && playerHand.length === 0 && dealerHand.length === 0) {
+      let tempPlayerHand = [];
+      let tempDealerHand = [];
+      for (let i = 0; i < 2; i++) {
+        tempPlayerHand.push(selectCard())
+        tempDealerHand.push(selectCard())        
+      }
+      setPlayerHand(tempPlayerHand);
+      setDealerHand(tempDealerHand);
+
+      //Check for blackjack
+      const playerBlackjack = checkForBlackJack(tempPlayerHand);
+      const dealerBlackjack = checkForBlackjack(tempDealerHand)
+
+      //update state based on blackjack check
+      if (playerBlackjack || dealerBlackjack) {
+        setGameOver(true);
+        setStatus(playerBlackjack ? 'Player has Blackjack' : "Dealer has Blackjack!")
+        if (playerBlackjack) {
+          setPlayerBank(playerBank + currentBet * 1.5); //blackjack pays 150% of bet
+        }
+        if (dealerBlackjack) {          
+        }
+        if (playerBlackjack && dealerBlackjack) {
+          setStatus("Bother Player and Dealer have Blackjack! It's a tie!");
+        }
+      } else {
+        setStatus('Player, Hit or Stand?')
+      }
+    } else {
+      console.log('Deal button clicked, but game is over or hands not empty')
+    }
+  };
+
+  const hit = () => {
+    if (!gameOver && playerHand.length > 0) {
+      dealCard(playerHand, (newHand) => {
+        setPlayerHand(newHand);
+        const newScore = computeHandTotal(newHand);
+        setPlayerScore(newScore);
+        if (newScore > 21) {
+          setGameOver(true);
+          setStatus('Player busts, Dealer Wins')
+        }
+      })
+    }
+  }
+
+  const stand = () => {
+    if(!gameOver && playerHand.length > 0) {
+      let newDealerHand = [...dealerHand];
+      while (computeHandTotal(newDealerHand) <= 17) {
+        newDealerHand.push(selectCard());
+      }
+      setDealerHand(newDealerHand)
+      const newDealerScore = computeHandTotal(newDealerHand);
+      setDealerScore(newDealerScore)
+    }
+  }
+
+  const renderBlackjack = () => {
+    setPlayerScore(computeHandTotal(playerHand));
+    setDealerScore(computeHandTotal(dealerHand));
+  }
+
+
+
+
+
+
+
+
+
 
 
 
