@@ -34,15 +34,10 @@ const Blackjack = () => {
   };
 
 
-  useEffect(() => {
-    const computeHandTotal = (hand) => {
-      const total = handleAces(hand, hand.reduce((total, card) => total + cardLookup(card), 0));
-      return total;   
-    };
-
-    setPlayerScore(computeHandTotal(playerHand));
-    setDealerScore(computeHandTotal(dealerHand));
-  }, [playerHand, dealerHand]);
+  const computeHandTotal = (hand) => {
+    const total = handleAces(hand, hand.reduce((total, card) => total + cardLookup(card), 0));
+    return total;
+  };
   
   
 
