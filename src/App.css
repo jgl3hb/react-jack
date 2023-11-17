@@ -20,6 +20,7 @@ h1 {
 #deck,
 #bet,
 #playerBank,
+#playerRules,
 #hitstand {
   display: flex;
   justify-content: center;
