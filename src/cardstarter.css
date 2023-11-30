@@ -1,6 +1,20 @@
 @charset "UTF-8";
-.card-placeholder {
-  visibility: hidden;
+.card.placeholder {
+  opacity: 0; /* or any other value you prefer */
+}
+
+.card-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.card-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 
@@ -26,11 +40,11 @@
   /* Not a card, but a card-shaped outline to represent a
      droppable place, like an empty pile. */ }
   .card.small {
-    font-size: 1000px; }
+    font-size: 12px; }
   .card.large {
-    font-size: 1000px; }
+    font-size: 26px; }
   .card.xlarge {
-    font-size: 1000px; }
+    font-size: 42px; }
   .card.no-border {
     border: 0; }
   .card.shadow {

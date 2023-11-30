@@ -44,7 +44,14 @@ const Blackjack = () => {
     aces.forEach(() => { if (total > 21) total -= 10; });
     return total;
   };
-
+  
+  const renderCardRow = (hand) => {
+    // Map the cards 
+    return hand.map((card, i) => (
+      <div key={i} className={`card ${card} w-24 h-36 sm:w-16 sm:h-24`}></div>
+    ));
+  };
+  
   const renderCard = (hand, deckId) => {
     return hand.map((card, i) => (
       <div
@@ -195,14 +202,18 @@ const Blackjack = () => {
   
   return (
     <div className="min-h-screen p-4 flex flex-col items-center justify-center">
-      <div className="flex justify-center pt-4" id="dealer-cards">{renderCard(dealerHand, 'dealer-cards')}</div>
-      {gameOver && (
+    <div className="pt-4" id="dealer-cards">
+      {renderCardRow(dealerHand)}
+    </div>
+  {gameOver && (
       <div className="text-white text-4xl mb-4" id="dealerhandvalue">{dealerScore}</div>
       )}
       <div className="text-white text-4xl mb-4" id="playerBank">Blackjack</div>
       <div className="text-white text-4xl mb-4" id="playerBank">Pays 3 to 2</div>
       <div className="text-white text-xl" id="status">{status}</div>
-      <div className="flex justify-center" id="player-cards">{renderCard(playerHand, 'player-cards')}</div>
+      <div className="p-0 m-0" id="player-cards">
+        {renderCardRow(playerHand)}
+      </div>    
       <div className="text-white text-4xl" id="playerhandvalue">{playerScore}</div>
       <div className="flex space-x-4 mb-4">
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
