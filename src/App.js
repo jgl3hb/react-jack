@@ -130,6 +130,9 @@ const Blackjack = () => {
         if (newScore > 21) {
           setGameOver(true);
           setStatus("Player Busts, Dealer Wins");
+        } else if (newScore === 21) {
+          setGameOver(true);
+          renderWin(newScore, 0); 
         }
       });
     }
@@ -153,11 +156,11 @@ const Blackjack = () => {
       setGameOver(true);
       setCurrentBet(0);
       setStatus("Player Busts, Dealer Wins");
-    } else if (dealerScore > 21) {
+    } else if (dealerScore > 21 || playerScore === 21) { // Check for dealer bust or player 21
       setGameOver(true);
       setPlayerBank(playerBank + currentBet * 2);
       setCurrentBet(0);
-      setStatus("Dealer Busts, Player Wins!");
+      setStatus(dealerScore > 21 ? "Dealer Busts, Player Wins!" : "Blackjack! Player Wins!");
     } else if (playerScore > dealerScore && playerScore <= 21) {
       setGameOver(true);
       setPlayerBank(playerBank + currentBet * 2);
@@ -167,12 +170,11 @@ const Blackjack = () => {
       setGameOver(true);
       setPlayerBank(playerBank + currentBet);
       setCurrentBet(0);
-
       setStatus("Push");
     } else {
-      setGameOver(true)
-      setCurrentBet(0)
-      setStatus("Dealer Wins")
+      setGameOver(true);
+      setCurrentBet(0);
+      setStatus("Dealer Wins");
     }
   };
 
