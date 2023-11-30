@@ -51,15 +51,6 @@ const Blackjack = () => {
       <div key={i} className={`card ${card} w-24 h-36 sm:w-16 sm:h-24`}></div>
     ));
   };
-  
-  const renderCard = (hand, deckId) => {
-    return hand.map((card, i) => (
-      <div
-        key={i}
-        className={`card large ${deckId === 'dealer-cards' && i === 1 && !gameOver ? 'back-red' : card}`}
-      ></div>
-    ));
-  };
 
   const handleBet = (betAmount) => {
     if (playerBank >= betAmount) {
