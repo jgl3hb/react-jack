@@ -77,6 +77,20 @@ div {
 
 .card {
   margin: 5px 5px 5px 5px;
+  width: 20vw;  /* 20% of the viewport width */
+  height: 28vw; /* height proportional to width */
+  max-width: 100px; /* maximum size */
+  max-height: 140px; /* maximum size */
+}
+
+/* Adjustments for smaller screens */
+@media (max-width: 600px) {
+  .card {
+    width: 30vw;  /* increase to 30% of the viewport width */
+    height: 42vw; /* height proportional to width */
+    max-width: 80px; /* adjust maximum size */
+    max-height: 112px; /* adjust maximum size */
+  }
 }
 
 .card.outline {
