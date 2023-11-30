@@ -80,9 +80,11 @@ const Blackjack = () => {
   };
 
   const checkForBlackjack = (hand) => {
-    //Blackjack must include and Ace and a 10 or face card
-    return hand.includes('A') && (hand.includes('10') || hand.includes('J') || hand.includes('Q') || hand.includes('K'));
+    const hasAce = hand.some(card => card.endsWith('A'));
+    const hasTenPointCard = hand.some(card => ['10', 'J', 'Q', 'K'].includes(card.slice(1)));
+    return hasAce && hasTenPointCard;
   };
+  
 
   const initialDeal = () => {
     if (!gameOver && playerHand.length === 0 && dealerHand.length === 0) { 
@@ -199,10 +201,12 @@ const Blackjack = () => {
       {renderCardRow(dealerHand)}
     </div>
   {gameOver && (
-      <div className="text-white text-4xl mb-4" id="dealerhandvalue">{dealerScore}</div>
+    <div className={`score ${gameOver ? 'visible' : ''}`} id="dealerhandvalue">
+      {dealerScore}
+    </div>
       )}
-      <div className="text-white text-4xl mb-4" id="playerBank">Blackjack</div>
-      <div className="text-white text-4xl mb-4" id="playerBank">Pays 3 to 2</div>
+      <div className="text-white text-4xl" id="playerBank">Blackjack</div>
+      <div className="text-white text-4xl" id="playerBank">Pays 3 to 2</div>
       <div className="text-white text-xl" id="status">{status}</div>
       <div className="p-0 m-0" id="player-cards">
         {renderCardRow(playerHand)}

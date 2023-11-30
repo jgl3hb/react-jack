@@ -18,14 +18,16 @@
 }
 
 
+
+
 .card {
   box-sizing: border-box;
   display: inline-block;
-  margin: 5px 5px 50px 5px;
+  margin: 0px 5px 0px 5px;  
   cursor: pointer;
   font-size: inherit;
-  width: 8.0em;  /* doubled from 4.0em */
-  height: 11.0em; /* doubled from 5.5em */
+  width: 8.0em;
+  height: 11.0em;
   background-color: #fff;
   border-radius: 0.20em;
   border: 1px solid #c3c3c3;
@@ -35,24 +37,7 @@
   text-indent: 100%;
   white-space: nowrap;
   overflow: hidden;
-  /* Default sizes for cards (size based off the font). */
-  /* Optional styles for cards: borderless and drop shadow. */
-  /* Not a card, but a card-shaped outline to represent a
-     droppable place, like an empty pile. */ }
-  .card.small {
-    font-size: 12px; }
-  .card.large {
-    font-size: 26px; }
-  .card.xlarge {
-    font-size: 42px; }
-  .card.no-border {
-    border: 0; }
-  .card.shadow {
-    box-shadow: 2px 2px 3px 0 rgba(41, 41, 41, 0.75); }
-  .card.outline {
-    background-image: none;
-    background-color: rgba(195, 195, 195, 0.5);
-    border: 0.15em dashed #daa520; }
+}
 
 .card.diamonds.A,
 .card.dA,

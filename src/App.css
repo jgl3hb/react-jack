@@ -57,16 +57,30 @@ div {
   justify-content: flex-start;
 }
 
-#player-cards,
-#dealer-cards {
+#player-cards, #dealer-cards {
   display: flex;
-  justify-content: center; /* This will center the cards horizontally */
-  align-items: center; 
-  flex-wrap: wrap; 
-  min-height: 150px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  min-height: 150px; /* or any value that suits your design */
 }
 
+/* Responsive design */
+@media (max-width: 600px) {
+  .card {
+    width: 6.0em; /* Smaller width for small screens */
+    height: 8.5em; /* Adjust height proportionally */
+  }
+}
 
+.score {
+  min-height: 30px; /* Reserve space for score */
+  visibility: hidden; /* Initially hidden */
+}
+
+.score.visible {
+  visibility: visible; /* Make visible when needed */
+}
 
 #bet {
   font-weight: bold;
