@@ -1,6 +1,8 @@
+// /home/harvest/hack/react-jack/src/App.js
 import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
 import './cardstarter.css';
+import StartScreen from './StartScreen';
 
 const deckData = [
   "dA", "dQ", "dK", "dJ", "d10", "d09", "d08", "d07", "d06", "d05", "d04", "d03", "d02",
@@ -9,7 +11,7 @@ const deckData = [
   "sA", "sQ", "sK", "sJ", "s10", "s09", "s08", "s07", "s06", "s05", "s04", "s03", "s02"
 ];
 
-const Blackjack = () => {
+const Blackjack = ({ numPlayers }) => {
   const [playerHand, setPlayerHand] = useState([]);
   const [dealerHand, setDealerHand] = useState([]);
   const [playerBank, setPlayerBank] = useState(500);
@@ -196,22 +198,29 @@ const Blackjack = () => {
   }, [playerHand, dealerHand, computeHandTotal]);
   
   return (
-    <div className="min-h-screen p-4 flex flex-col items-center justify-center">
-    <div className="pt-4" id="dealer-cards">
-      {renderCardRow(dealerHand)}
-    </div>
-  {gameOver && (
-    <div className={`score ${gameOver ? 'visible' : ''}`} id="dealerhandvalue">
-      {dealerScore}
-    </div>
+    <div className="min-h-screen p-4 flex flex-col items-center justify-center relative">
+      <div className="fixed top-0 left-0 right-0 flex flex-col items-center py-2">
+        <div className="text-white text-4xl" id="playerBank">Blackjack</div>
+        <div className="text-white text-4xl" id="playerBank">Pays 3 to 2</div>
+      </div>
+  
+      <div className="pt-24" id="dealer-cards">
+        {renderCardRow(dealerHand)}
+      </div>
+      {gameOver && (
+        <div className={`score ${gameOver ? 'visible' : ''}`} id="dealerhandvalue">
+          {dealerScore}
+        </div>
       )}
-      <div className="text-white text-4xl" id="playerBank">Blackjack</div>
-      <div className="text-white text-4xl" id="playerBank">Pays 3 to 2</div>
+  
       <div className="text-white text-xl" id="status">{status}</div>
       <div className="p-0 m-0" id="player-cards">
         {renderCardRow(playerHand)}
-      </div>    
+      </div>
       <div className="text-white text-4xl" id="playerhandvalue">{playerScore}</div>
+  
+      <div className="fixed bottom-0 left-0 right-0 flex flex-col items-center py-2">
+
       <div className="flex space-x-4 mb-4">
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           onClick={() => {
@@ -223,6 +232,7 @@ const Blackjack = () => {
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={stand}>Stand</button>
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={resetGame}>Reset</button>
       </div>
+  
       <div className="flex space-x-4 mb-4" id="betting-area">
         <button className="relative bg-red-500 text-black font-bold py-2 rounded-full w-12 h-12" onClick={() => handleBet(1)}>
           <span className="relative z-10">$1</span>
@@ -241,9 +251,29 @@ const Blackjack = () => {
           <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-full w-8 h-8"></span>
         </button>
       </div>
+  
       <div className="text-white text-4xl mb-4" id="playerBank">${playerBank}</div>
+    </div>
     </div>
   );
 };
 
-export default Blackjack;
+const App = () => {
+  const [numPlayers, setNumPlayers] = useState(null);
+
+  const handleStartGame = (numPlayers) => {
+    setNumPlayers(numPlayers);
+  };
+
+  return (
+    <div className="App bg-blackjack-table min-h-screen flex flex-col items-center justify-center">
+      {numPlayers === null ? (
+        <StartScreen onStartGame={handleStartGame} />
+      ) : (
+        <Blackjack numPlayers={numPlayers} />
+      )}
+    </div>
+  );
+};
+
+export default App;
