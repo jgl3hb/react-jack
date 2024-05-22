@@ -213,7 +213,7 @@ const Blackjack = ({ numPlayers }) => {
         </div>
       )}
   
-      <div className="text-white text-xl" id="status">{status}</div>
+  <div className="text-white text-xl pt-4 pb-4" id="status">{status}</div>
       <div className="p-0 m-0" id="player-cards">
         {renderCardRow(playerHand)}
       </div>
