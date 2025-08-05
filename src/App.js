@@ -3,6 +3,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
 import './cardstarter.css';
 import StartScreen from './StartScreen';
+import PlayerHand from './components/PlayerHand/PlayerHand';
+import DealerHand from './components/DealerHand/DealerHand';
 
 const deckData = [
   "dA", "dQ", "dK", "dJ", "d10", "d09", "d08", "d07", "d06", "d05", "d04", "d03", "d02",
@@ -21,6 +23,9 @@ const Blackjack = ({ numPlayers }) => {
   const [playerScore, setPlayerScore] = useState(0);
   const [dealerScore, setDealerScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
+  const [splitHand, setSplitHand] = useState([]);
+  const [splitScore, setSplitScore] = useState(0);
+  const [isSplit, setIsSplit] = useState(false);
 
   const cardLookup = (card) => {
     const cardValueStr = card.slice(1);
@@ -47,12 +52,6 @@ const Blackjack = ({ numPlayers }) => {
     return total;
   };
   
-  const renderCardRow = (hand) => {
-    // Map the cards 
-    return hand.map((card, i) => (
-      <div key={i} className={`card ${card} w-24 h-36 sm:w-16 sm:h-24`}></div>
-    ));
-  };
 
   const handleBet = (betAmount) => {
     if (playerBank >= betAmount) {
@@ -64,6 +63,9 @@ const Blackjack = ({ numPlayers }) => {
       setStatus(`Player Bet is $${betAmount}, Press Deal`);
       setCurrentBet(betAmount);
       setPlayerBank(playerBank - betAmount);
+      setSplitHand([]);
+      setSplitScore(0);
+      setIsSplit(false);
     } else {
       setStatus(`You don't have enough money. Game over.`);
     }
@@ -89,9 +91,12 @@ const Blackjack = ({ numPlayers }) => {
   
 
   const initialDeal = () => {
-    if (!gameOver && playerHand.length === 0 && dealerHand.length === 0) { 
+    if (!gameOver && playerHand.length === 0 && dealerHand.length === 0) {
       let tempPlayerHand = [];
       let tempDealerHand = [];
+      setSplitHand([]);
+      setSplitScore(0);
+      setIsSplit(false);
       for (let i = 0; i < 2; i++) { 
         tempPlayerHand.push(selectCard());
         tempDealerHand.push(selectCard());
@@ -142,16 +147,58 @@ const Blackjack = ({ numPlayers }) => {
     }
   };
 
+  const dealerPlay = (score) => {
+    let newDealerHand = [...dealerHand];
+    while (computeHandTotal(newDealerHand) <= 17) {
+      newDealerHand.push(selectCard());
+    }
+    setDealerHand(newDealerHand);
+    const newDealerScore = computeHandTotal(newDealerHand);
+    setDealerScore(newDealerScore);
+    renderWin(score, newDealerScore);
+  };
+
   const stand = () => {
     if (!gameOver && playerHand.length > 0) {
-      let newDealerHand = [...dealerHand];
-      while (computeHandTotal(newDealerHand) <= 17) {
-        newDealerHand.push(selectCard());
-      }
-      setDealerHand(newDealerHand);
-      const newDealerScore = computeHandTotal(newDealerHand);
-      setDealerScore(newDealerScore);
-      renderWin(playerScore, newDealerScore);
+      const finalScore = isSplit ? Math.max(playerScore, splitScore) : playerScore;
+      dealerPlay(finalScore);
+      setIsSplit(false);
+    }
+  };
+
+  const doubleDown = () => {
+    if (!gameOver && playerHand.length === 2 && playerBank >= currentBet) {
+      setPlayerBank(playerBank - currentBet);
+      setCurrentBet(currentBet * 2);
+      dealCard(playerHand, (newHand) => {
+        setPlayerHand(newHand);
+        const newScore = computeHandTotal(newHand);
+        setPlayerScore(newScore);
+        if (isSplit) {
+          setSplitScore(newScore);
+        }
+        dealerPlay(isSplit ? Math.max(newScore, splitScore) : newScore);
+      });
+    }
+  };
+
+  const splitHandAction = () => {
+    if (
+      !gameOver &&
+      playerHand.length === 2 &&
+      cardLookup(playerHand[0]) === cardLookup(playerHand[1]) &&
+      playerBank >= currentBet
+    ) {
+      setPlayerBank(playerBank - currentBet);
+      setCurrentBet(currentBet * 2);
+      const first = [playerHand[0], selectCard()];
+      const second = [playerHand[1], selectCard()];
+      setPlayerHand(first);
+      setPlayerScore(computeHandTotal(first));
+      setSplitHand(second);
+      setSplitScore(computeHandTotal(second));
+      setIsSplit(true);
+      setStatus('Split hand - playing first hand');
     }
   };
 
@@ -203,22 +250,11 @@ const Blackjack = ({ numPlayers }) => {
         <div className="text-white text-4xl" id="playerBank">Blackjack</div>
         <div className="text-white text-4xl" id="playerBank">Pays 3 to 2</div>
       </div>
-  
-      <div className="pt-24" id="dealer-cards">
-        {renderCardRow(dealerHand)}
-      </div>
-      {gameOver && (
-        <div className={`score ${gameOver ? 'visible' : ''}`} id="dealerhandvalue">
-          {dealerScore}
-        </div>
-      )}
-  
-  <div className="text-white text-xl pt-4 pb-4" id="status">{status}</div>
-      <div className="p-0 m-0" id="player-cards">
-        {renderCardRow(playerHand)}
-      </div>
-      <div className="text-white text-4xl" id="playerhandvalue">{playerScore}</div>
-  
+        <DealerHand hand={dealerHand} score={dealerScore} showScore={gameOver} />
+        <div className="text-white text-xl pt-4 pb-4" id="status">{status}</div>
+        <PlayerHand hand={playerHand} score={playerScore} />
+        {isSplit && <PlayerHand hand={splitHand} score={splitScore} />}
+
       <div className="fixed bottom-0 left-0 right-0 flex flex-col items-center py-2">
 
       <div className="flex space-x-4 mb-4">
@@ -230,6 +266,8 @@ const Blackjack = ({ numPlayers }) => {
           }}>Deal</button>
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={hit}>Hit</button>
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={stand}>Stand</button>
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={doubleDown}>Double</button>
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={splitHandAction}>Split</button>
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={resetGame}>Reset</button>
       </div>
   
