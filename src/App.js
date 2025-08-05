@@ -3,6 +3,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
 import './cardstarter.css';
 import StartScreen from './StartScreen';
+import PlayerHand from './components/PlayerHand/PlayerHand';
+import DealerHand from './components/DealerHand/DealerHand';
 
 const deckData = [
   "dA", "dQ", "dK", "dJ", "d10", "d09", "d08", "d07", "d06", "d05", "d04", "d03", "d02",
@@ -47,12 +49,6 @@ const Blackjack = ({ numPlayers }) => {
     return total;
   };
   
-  const renderCardRow = (hand) => {
-    // Map the cards 
-    return hand.map((card, i) => (
-      <div key={i} className={`card ${card} w-24 h-36 sm:w-16 sm:h-24`}></div>
-    ));
-  };
 
   const handleBet = (betAmount) => {
     if (playerBank >= betAmount) {
@@ -203,22 +199,10 @@ const Blackjack = ({ numPlayers }) => {
         <div className="text-white text-4xl" id="playerBank">Blackjack</div>
         <div className="text-white text-4xl" id="playerBank">Pays 3 to 2</div>
       </div>
-  
-      <div className="pt-24" id="dealer-cards">
-        {renderCardRow(dealerHand)}
-      </div>
-      {gameOver && (
-        <div className={`score ${gameOver ? 'visible' : ''}`} id="dealerhandvalue">
-          {dealerScore}
-        </div>
-      )}
-  
-  <div className="text-white text-xl pt-4 pb-4" id="status">{status}</div>
-      <div className="p-0 m-0" id="player-cards">
-        {renderCardRow(playerHand)}
-      </div>
-      <div className="text-white text-4xl" id="playerhandvalue">{playerScore}</div>
-  
+        <DealerHand hand={dealerHand} score={dealerScore} showScore={gameOver} />
+        <div className="text-white text-xl pt-4 pb-4" id="status">{status}</div>
+        <PlayerHand hand={playerHand} score={playerScore} />
+
       <div className="fixed bottom-0 left-0 right-0 flex flex-col items-center py-2">
 
       <div className="flex space-x-4 mb-4">
