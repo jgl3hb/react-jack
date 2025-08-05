@@ -253,7 +253,9 @@ const Blackjack = ({ numPlayers }) => {
         <DealerHand hand={dealerHand} score={dealerScore} showScore={gameOver} />
         <div className="text-white text-xl pt-4 pb-4" id="status">{status}</div>
         <PlayerHand hand={playerHand} score={playerScore} />
+        
         {isSplit && <PlayerHand hand={splitHand} score={splitScore} />}
+
 
       <div className="fixed bottom-0 left-0 right-0 flex flex-col items-center py-2">
 
